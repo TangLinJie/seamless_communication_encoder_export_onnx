@@ -98,8 +98,21 @@ class UnitYEncoderAdaptor(TransformerEncoder):
     def forward(
         self,
         seqs: Tensor,
-        padding_mask: Optional[PaddingMask],
+        seq_len: int = None,
+        # padding_mask: Optional[PaddingMask],
+        # padding_mask: Optional[Tensor] = None,
+        # padding_mask_batch_seq_len:  Optional[int] = None,
+        # padding_mask_params: Optional[list] = None,
     ) -> Tuple[Tensor, Optional[PaddingMask]]:
+        # if padding_mask_params is not None:
+        #     padding_mask = PaddingMask(*padding_mask_params)
+        # else:
+        #     padding_mask = None
+
+        # import numpy as np
+        # np.savez('input/input.npz',input_seqs=seqs.detach().numpy())
+        # print('UnitYEncoderAdaptor type(self.inner): ', type(self.inner))
+        padding_mask = PaddingMask(seq_len, 80) # 160) # 576) # 320)
         seqs, padding_mask = self.inner(seqs, padding_mask)
 
         if self.inner_layer_norm is not None:
@@ -113,7 +126,10 @@ class UnitYEncoderAdaptor(TransformerEncoder):
 
         seqs = self.layer_norm(seqs)
 
-        return seqs, padding_mask
+        # import numpy as np
+        # np.savez('output/output.npz',input_seqs=seqs.detach().numpy())
+        # return seqs, padding_mask
+        return seqs
 
     def _expand_contract(self, seqs: Tensor) -> Tensor:
         seqs = self.proj1(seqs)
@@ -237,6 +253,7 @@ class UnitYTransformerAdaptorLayer(TransformerEncoderLayer):
     def forward(
         self,
         seqs: Tensor,
+        # seq_len: int,
         padding_mask: Optional[PaddingMask],
         self_attn_mask: Optional[AttentionMask] = None,
     ) -> Tuple[Tensor, Optional[PaddingMask]]:
@@ -249,6 +266,7 @@ class UnitYTransformerAdaptorLayer(TransformerEncoderLayer):
     def _forward_self_attn(
         self,
         seqs: Tensor,
+        # seq_len: int,
         padding_mask: Optional[PaddingMask],
         self_attn_mask: Optional[AttentionMask],
     ) -> Tuple[Tensor, Optional[PaddingMask]]:
@@ -287,6 +305,7 @@ class UnitYTransformerAdaptorLayer(TransformerEncoderLayer):
         # encoder layer.
         seqs = self.self_attn(
             seqs,
+            # seq_len,
             padding_mask,
             keys=seqs,
             key_padding_mask=padding_mask,

@@ -114,6 +114,7 @@ class UnitYModel(EncoderDecoderModel):
             self.prosody_encoder_model = prosody_encoder_model
         else:
             self.register_module("prosody_encoder_model", None)
+        print(type(self.text_decoder))
 
     @finaloverride
     def encode(
@@ -132,9 +133,20 @@ class UnitYModel(EncoderDecoderModel):
     def encode_speech(
         self, seqs: Tensor, padding_mask: Optional[PaddingMask]
     ) -> Tuple[Tensor, Optional[PaddingMask]]:
-        seqs, padding_mask = self.speech_encoder_frontend(seqs, padding_mask)
+        print('encode_speech speech_encoder_frontend input seqs.shape: ', seqs.shape)
+        print('encode_speech speech_encoder_frontend input padding_mask: ', padding_mask)
+        # seqs, padding_mask = self.speech_encoder_frontend(seqs, padding_mask)
+        if padding_mask is not None:
+            padding_mask_params = [padding_mask.seq_lens, padding_mask.batch_seq_len, padding_mask.materialized]
+        else:
+            padding_mask_params = None
+        seqs, padding_mask_params = self.speech_encoder_frontend(seqs, padding_mask_params)
 
-        return self.speech_encoder(seqs, padding_mask)  # type: ignore[no-any-return]
+        # return self.speech_encoder(seqs, padding_mask)  # type: ignore[no-any-return]
+
+        print('encode_speech speech_encoder input seqs.shape: ', seqs.shape)
+        print('encode_speech speech_encoder input padding_mask_params: ', padding_mask_params)
+        return self.speech_encoder(seqs, padding_mask_params)  # type: ignore[no-any-return]
 
     def encode_text(
         self, seqs: Tensor, padding_mask: Optional[PaddingMask]
@@ -160,6 +172,7 @@ class UnitYModel(EncoderDecoderModel):
         *,
         state_bag: Optional[IncrementalStateBag] = None,
     ) -> Tuple[Tensor, Optional[PaddingMask]]:
+        print(type(self.text_decoder))
         if self.text_decoder is None:
             raise ValueError(
                 "`decode()` requires a text decoder, but the current UnitY model does not have one."

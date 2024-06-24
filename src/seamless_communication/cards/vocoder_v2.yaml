@@ -7,7 +7,7 @@
 name: vocoder_v2
 model_type: vocoder_code_hifigan
 model_arch: base
-checkpoint: "https://dl.fbaipublicfiles.com/seamless/models/vocoder_v2.pt"
+checkpoint: "/home/ljtang/.cache/fairseq2/assets/eedae72756484b914014c3c4/vocoder_v2.pt" # "https://dl.fbaipublicfiles.com/seamless/models/vocoder_v2.pt"
 model_config: {
   "lang_spkr_idx_map": {
       "multilingual": {

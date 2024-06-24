@@ -130,6 +130,36 @@ class UnitYGenerator:
             )
         assert model.text_decoder_frontend is not None
         assert model.final_proj is not None
+        import torch
+        """
+        input_names = ['input_seqs']
+        output_names = ['output_seqs']
+        dynamic_axes_1 = {
+            'input_seqs' : {1: 'seq_len'},
+            'output_seqs' : {1: 'seq_len'},
+        }
+        x = (torch.randn((1, 50, 80),requires_grad=False))
+        # torch.save(monotonic_decoder_model.text_decoder_frontend.state_dict(), 'seamless_streaming_monotonic_decoder_text_decoder_frontend.pt')
+        torch.onnx.export(model.speech_encoder_frontend.cpu(), x, 'm4t_unity_speech_encoder_frontend.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=12, dynamic_axes=dynamic_axes_1)
+        """
+
+        input_names = ['input_seqs', 'seq_len']
+        output_names = ['output_seqs']
+        x = (torch.randn(1,576, 1024,requires_grad=False), torch.tensor([127], dtype=torch.int64))
+        # torch.save(monotonic_decoder_model.text_decoder_frontend.state_dict(), 'seamless_streaming_monotonic_decoder_text_decoder_frontend.pt')
+        torch.onnx.export(model.speech_encoder.cpu(), x, 'm4t_unity_speech_encoder.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=13)
+
+        """
+        input_names = ['input_seqs', 'seq_len']
+        output_names = ['output_seqs']
+        dynamic_axes_1 = {
+            'input_seqs' : {1: 'seq_len'},
+            'output_seqs' : {1: 'seq_len'},
+        }
+        x = (torch.randn(1,1600, 1024,requires_grad=False), torch.tensor([127], dtype=torch.int64))
+        # torch.save(monotonic_decoder_model.text_decoder_frontend.state_dict(), 'seamless_streaming_monotonic_decoder_text_decoder_frontend.pt')
+        torch.onnx.export(model.speech_encoder.cpu(), x, 'm4t_unity_speech_encoder.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=13)
+        """
 
         s2t_model = UnitYX2TModel(
             encoder_frontend=model.speech_encoder_frontend,

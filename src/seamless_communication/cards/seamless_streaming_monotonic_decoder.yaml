@@ -7,4 +7,4 @@
 name: seamless_streaming_monotonic_decoder
 model_type: monotonic_decoder
 model_arch: dense_1b
-checkpoint: "https://huggingface.co/facebook/seamless-streaming/resolve/main/seamless_streaming_monotonic_decoder.pt"
+checkpoint: "/home/ljtang/.cache/fairseq2/assets/eedae72756484b914014c3c4/seamless_streaming_monotonic_decoder.pt" # "https://huggingface.co/facebook/seamless-streaming/resolve/main/seamless_streaming_monotonic_decoder.pt"

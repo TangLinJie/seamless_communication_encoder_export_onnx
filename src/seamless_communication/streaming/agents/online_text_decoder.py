@@ -221,6 +221,12 @@ class MMATextDecoderAgent(OnlineTextDecoderAgent):  # type: ignore
         decoder_output, _, p_choose = self.model.decode(
             target_input, None, encoder_output, None, state_bag=self.state_bag
         )
+        print('Monotonic text_decoder output decoder_output.shape: ', decoder_output.shape)
+        print('Monotonic text_decoder output decoder_output: ', decoder_output)
+        print('Monotonic text_decoder output p_choose.shape: ', p_choose.shape)
+        print('Monotonic text_decoder output p_choose: ', p_choose)
+        # import numpy as np
+        # np.savez('output/output.npz',output_seqs=decoder_output, output_padding_mask_params=None, p_choose=p_choose)
 
         logits = self.model.project(decoder_output)
         if self.block_ngrams and states.source_finished:
@@ -302,6 +308,7 @@ class MMATextDecoderAgent(OnlineTextDecoderAgent):  # type: ignore
 
     @torch.inference_mode()
     def policy(self, states: DecoderAgentStates) -> Action:
+        print('MMATextDecoderAgent running...')
         if len(states.source) == 0:
             return ReadAction()
 

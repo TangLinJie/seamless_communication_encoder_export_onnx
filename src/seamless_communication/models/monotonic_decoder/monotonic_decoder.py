@@ -66,12 +66,30 @@ class MonotonicTransformerDecoder(Module):
     def forward(
         self,
         seqs: Tensor,
-        padding_mask: Optional[PaddingMask],
+        # padding_mask: Optional[PaddingMask],
+        # padding_mask: Tensor,
+        # padding_mask_batch_seq_len:  Optional[int] = None,
+        padding_mask_params:  Optional[list] = None,
         encoder_output: Optional[Tensor] = None,
-        encoder_padding_mask: Optional[PaddingMask] = None,
-        *,
-        state_bag: Optional[IncrementalStateBag] = None,
+        # encoder_padding_mask: Optional[PaddingMask] = None,
+        # encoder_padding_mask: Optional[Tensor] = None,
+        # encoder_padding_mask_seq_len:  Optional[int] = None,
+        encoder_padding_mask_params: Optional[list] = None,
+        # state_bag: Optional[IncrementalStateBag] = None,
+        state_bag: Optional[list] = None,
     ) -> Tuple[Tensor, Optional[PaddingMask], Tensor]:
+        # padding_mask_params = None
+        # encoder_padding_mask_params = None
+        if padding_mask_params is not None:
+            padding_mask = PaddingMask(*padding_mask_params)
+        else:
+            padding_mask = None
+        if encoder_padding_mask_params is not None:
+            encoder_padding_mask = PaddingMask(*encoder_padding_mask_params)
+        else:
+            encoder_padding_mask = None
+        if state_bag is not None:
+            state_bag = IncrementalStateBag(*state_bag)
         self_attn_mask = self.self_attn_mask_factory(
             seqs, keys=seqs, training=self.training, state_bag=state_bag
         )
@@ -95,4 +113,8 @@ class MonotonicTransformerDecoder(Module):
 
         p_choose = p_choose.flatten(0, 1)
 
-        return seqs, padding_mask, p_choose
+        # return seqs, padding_mask, p_choose
+        if padding_mask is not None:
+            return seqs, [padding_mask.seq_lens, padding_mask.batch_seq_len, padding_mask.materialized], p_choose
+        else:
+            return seqs, None, p_choose

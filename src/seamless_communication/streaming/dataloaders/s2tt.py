@@ -110,7 +110,12 @@ class SimulEvalSpeechToTextDataloader(SpeechToTextDataloader, IterableDataloader
     def __next__(self) -> SimulEvalSpeechToTextDataloader:
         if self.cur_index >= self.end_index - 1:
             raise StopIteration
+        print(type(self.data_pipeline))
+        print(self.data_pipeline)
+        print(self.end_index)
+        print(type(self.data_itr))
         self.item = next(self.data_itr)
+        print(self.cur_index)
         self.cur_index += 1
         return self
 
@@ -167,8 +172,10 @@ class SimulEvalSpeechToTextDataloader(SpeechToTextDataloader, IterableDataloader
         )
 
         map_file = FileMapper(root_dir=args.audio_root_dir, cached_fd_count=10)
+        print(map_file)
 
         pipeline_builder.map(map_file, selector="audio")
+        print(pipeline_builder)
 
         device = getattr(args, "device", None)
         assert device is not None
