@@ -9,7 +9,7 @@ translator = Translator(
     device=torch.device("cpu"), # works if I use device="cpu" + dtype=torch.float16
     dtype=torch.float32,
 )
-file_dir = "/home/ljtang/workspace/sophon-demo_seamless/sample/Seamless/datasets/aishell_S0764/"
+file_dir = "test_data"
 filepaths = [os.path.join(file_dir, filename) for filename in os.listdir(file_dir)]
 total_time = 0
 for filepath in filepaths:
