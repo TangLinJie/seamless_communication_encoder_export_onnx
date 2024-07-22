@@ -136,7 +136,7 @@ class UnitYPipelineMixin:
         print(type(unity_model.speech_encoder_frontend))
         # unity_model.text_decoder = text_tokenizer.create_decoder()
         # streaming_evaluate --task s2tt --data-file ./cvssc_ja/test.tsv --audio-root-dir ./cvssc_ja/test --output ./test --tgt-lang eng --dtype fp32 --device cpu
-        """
+
         input_names = ['input_seqs']
         output_names = ['output_seqs']
         dynamic_axes_1 = {
@@ -145,8 +145,8 @@ class UnitYPipelineMixin:
         }
         x = (torch.randn((1, 50, 80),requires_grad=False))
         # torch.save(monotonic_decoder_model.text_decoder_frontend.state_dict(), 'seamless_streaming_monotonic_decoder_text_decoder_frontend.pt')
-        torch.onnx.export(unity_model.speech_encoder_frontend.cpu(), x, 'seamless_streaming_unity_speech_encoder_frontend.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=12, dynamic_axes=dynamic_axes_1)
-        """
+        torch.onnx.export(unity_model.speech_encoder_frontend.cpu(), x, 'seamless_streaming_unity_speech_encoder_frontend/seamless_streaming_unity_speech_encoder_frontend.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=12, dynamic_axes=dynamic_axes_1)
+
         """
         input_names = ['input_seqs']
         output_names = ['output_seqs']
@@ -160,8 +160,10 @@ class UnitYPipelineMixin:
         output_names = ['output_seqs']
         x = (torch.randn(1,80, 1024,requires_grad=False), torch.tensor([27], dtype=torch.int64))
         # torch.save(monotonic_decoder_model.text_decoder_frontend.state_dict(), 'seamless_streaming_monotonic_decoder_text_decoder_frontend.pt')
-        torch.onnx.export(unity_model.speech_encoder.cpu(), x, 'seamless_streaming_unity_speech_encoder.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=13)
+        torch.onnx.export(unity_model.speech_encoder.cpu(), x, 'seamless_streaming_unity_speech_encoder/seamless_streaming_unity_speech_encoder.onnx', input_names=input_names, output_names=output_names, verbose='True', opset_version=13)
 
+        import sys
+        sys.exit(0)
         
 
         monotonic_decoder_config = load_monotonic_decoder_config(

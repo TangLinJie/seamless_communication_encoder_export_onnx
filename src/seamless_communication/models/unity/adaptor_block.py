@@ -112,7 +112,7 @@ class UnitYEncoderAdaptor(TransformerEncoder):
         # import numpy as np
         # np.savez('input/input.npz',input_seqs=seqs.detach().numpy())
         # print('UnitYEncoderAdaptor type(self.inner): ', type(self.inner))
-        padding_mask = PaddingMask(seq_len, 576) # 160) # 576) # 320)
+        padding_mask = PaddingMask(seq_len, 80) # 160) # 576) # 320)
         seqs, padding_mask = self.inner(seqs, padding_mask)
 
         if self.inner_layer_norm is not None:
